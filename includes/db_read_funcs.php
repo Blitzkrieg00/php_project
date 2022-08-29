@@ -3,6 +3,13 @@
 	/**
 		Soc functions
 	*/
+	function get_all_socs(){
+		return query("	SELECT 	s.soc_id, s.rev_id, 
+								s.created_by as \"subbed since\", 
+								s.soc_name as \"society\" 
+						FROM societies s");
+	}
+
 	function get_society($sname, $show_deleted = false)
 	{
 		return  (($s = query("	SELECT 	s.*, 
@@ -59,6 +66,21 @@
 		$status["creator"] = $soc["created_by"] == $uid;
 		return $status;
 	}
+	function guest_soc_rel($soc, $uid = null)
+	{
+		isset($uid) || $uid = 3;
+		$status = query("SELECT EXISTS(SELECT 1 FROM soc_subs WHERE user_id=? and soc_id = ?) as \"sub\",
+								EXISTS(SELECT 1 FROM soc_mods WHERE user_id=? and soc_id = ?) as \"mod\", 
+								EXISTS(SELECT 1 FROM soc_bans WHERE user_id=? and soc_id = ?) as \"banned\",
+								EXISTS(SELECT 1 FROM users    WHERE user_id=? and status = ?) as \"admin\"",
+						$uid, $soc["soc_id"], 
+						$uid, $soc["soc_id"], 
+						$uid, $soc["soc_id"], 
+						$uid, "ADMIN"
+						)[0];
+		$status["creator"] = $soc["created_by"] == $uid;
+		return $status;
+	}
 
 	function get_subbed_socs()
 	{
@@ -93,7 +115,7 @@
 	function get_posts($soc, $offset = 0, $lim = 20)
 	{
 		return query("	SELECT  p.*,
-								u.username, 
+								u.username,u.avatar,
 								if(p.status='STICKIED',10,0) as \"rank\",
 								sum(if(v.vote='UP',1,if(v.vote='DOWN',-1,0))) as \"votes\",
 								(SELECT count(*) 
@@ -126,7 +148,44 @@
 						$offset
 					);
 	}
-	
+		function guest_get_posts($soc, $offset = 0, $lim = 20)
+	{
+		$a = 3;
+		return query("	SELECT  p.*,
+								u.username,u.avatar, 
+								if(p.status='STICKIED',10,0) as \"rank\",
+								sum(if(v.vote='UP',1,if(v.vote='DOWN',-1,0))) as \"votes\",
+								(SELECT count(*) 
+								 FROM post_views w
+								 WHERE w.post_id = p.post_id
+								) as \"views\",
+								(SELECT count(*) 
+								   FROM comments c
+								  WHERE c.post_id = p.post_id
+								) as \"comments\",
+								(SELECT pv.vote 
+								   FROM post_votes pv
+								  WHERE pv.post_id = p.post_id
+								    AND pv.user_id = ?
+								) as \"vote\"
+						FROM posts p 
+						JOIN societies s on p.soc_id = s.soc_id 
+						LEFT JOIN post_votes v on p.post_id = v.post_id 
+						JOIN users u on p.user_id = u.user_id
+						
+						WHERE p.soc_id = ? AND p.status != 'DELETED'
+						GROUP BY p.post_id
+						ORDER BY rank DESC, votes DESC, views DESC
+						LIMIT ?
+						OFFSET ?",
+
+						$a,
+						$soc["soc_id"], 
+						$lim, 
+						$offset
+					);
+	}
+
 	function get_post($pid)
 	{
 		return ($p = query("	SELECT  p.*, 
@@ -159,10 +218,58 @@
 				?
 				$p[0]:false;		
 	}
+		function guest_get_post($pid)
+	{
+		$a=3;
+		return ($p = query("	SELECT  p.*, 
+										u.username,
+										sum(if(v.vote='UP',1,if(v.vote='DOWN',-1,0))) as votes,
+										(SELECT count(*) 
+										 FROM post_views w
+										 WHERE w.post_id = p.post_id
+										) as \"views\",
+										(SELECT count(*) 
+										 FROM comments c
+										 WHERE c.post_id = p.post_id
+										) as \"comments\",
+										(SELECT pv.vote 
+										   FROM post_votes pv
+										  WHERE pv.post_id = p.post_id
+										    AND pv.user_id = ?
+										) as \"vote\"
+								FROM posts p 
+								LEFT JOIN post_votes v on v.post_id = p.post_id
+								JOIN users u on p.user_id = u.user_id
+								
+								WHERE p.post_id = ?
+								GROUP BY p.post_id ",
+
+								$a,
+								$pid
+							)
+				)
+				?
+				$p[0]:false;		
+	}
 
 	function post_rel($pid, $uid = null)
 	{
 		isset($uid) || $uid = $_SESSION["user"]["user_id"];
+		return ($r = query("	SELECT 
+									exists(SELECT 1 FROM post_subs WHERE user_id=? and post_id = ?) as \"sub\",
+									vote
+								FROM post_votes
+								WHERE user_id = ? and post_id = ?",
+								$uid, $pid,
+								$uid, $pid
+						)
+				)
+				?
+				$r[0]:false;
+	}
+		function guest_post_rel($pid, $uid = null)
+	{
+		isset($uid) || $uid = 3;
 		return ($r = query("	SELECT 
 									exists(SELECT 1 FROM post_subs WHERE user_id=? and post_id = ?) as \"sub\",
 									vote
@@ -204,7 +311,7 @@
 	{ 
 		return query("	SELECT 	if(c.parent_id is NULL, c.comm_id, c.parent_id) anc_id, 
 								c.comm_id, c.time, c.text, c.status,
-								u.user_id, u.username,
+								u.user_id,u.avatar,u.username,
 								sum(if(v.vote='UP',1,if(v.vote='DOWN',-1,0))) as votes,
 								(SELECT cv.vote 
 								   FROM comm_votes cv
@@ -220,6 +327,30 @@
 						LIMIT 100",
 
 						$_SESSION["user"]["user_id"],
+						$post["post_id"]
+					);
+	}
+		function guest_get_comments($post)
+	{ 
+		$a=3;
+		return query("	SELECT 	if(c.parent_id is NULL, c.comm_id, c.parent_id) anc_id, 
+								c.comm_id, c.time, c.text, c.status,
+								u.user_id, u.username,
+								sum(if(v.vote='UP',1,if(v.vote='DOWN',-1,0))) as votes,
+								(SELECT cv.vote 
+								   FROM comm_votes cv
+								  WHERE cv.comm_id = c.comm_id
+								    AND cv.user_id = ?
+								) as \"vote\"
+						FROM comments c 
+						LEFT JOIN comm_votes v on v.comm_id=c.comm_id
+						JOIN users u on c.user_id=u.user_id
+						WHERE post_id = ?
+						GROUP BY c.comm_id
+						ORDER BY votes DESC
+						LIMIT 100",
+
+						$a,
 						$post["post_id"]
 					);
 	}
@@ -251,6 +382,19 @@
 	function comm_rel($cid, $uid = null)
 	{
 		isset($uid) || $uid = $_SESSION["user"]["user_id"];
+		return ($r = query("SELECT vote
+							  FROM comm_votes
+							 WHERE user_id = ? and comm_id = ?",							
+							$uid, $cid,
+							$uid, $cid
+						)
+				)
+				?
+				$r[0]:false;
+	}
+		function guest_comm_rel($cid, $uid = null)
+	{
+		isset($uid) || $uid = 3;
 		return ($r = query("SELECT vote
 							  FROM comm_votes
 							 WHERE user_id = ? and comm_id = ?",							
@@ -875,7 +1019,7 @@
 	function get_news_feed($lim = 100, $offset = 0)
 	{
 		return query("	SELECT  p.*,
-								u.username, 
+								u.username,u.avatar, 
 								s.soc_name \"society\",
 								sum(if(v.vote='UP',1,if(v.vote='DOWN',-1,0))) as votes,
 								(SELECT count(*)

@@ -4,10 +4,10 @@
     define("DATABASE", "db");
 
     // your database's username
-    define("USERNAME", "adeelh");
+    define("USERNAME", "mmk");
 
     // your database's password
-    define("PASSWORD", "adeel");
+    define("PASSWORD", "123");
 
     // your database's server
     define("SERVER", "localhost");

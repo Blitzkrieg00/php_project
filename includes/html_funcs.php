@@ -271,6 +271,21 @@
 		$div["children"][] = $div2;
 		return $div;
 	}
+		function guest_post_summary($p, $sname, $show_soc = false)
+	{
+		$a = a("guest_post.php?pid=".$p["post_id"]."&soc=".$sname);
+		$title = div(h(4, $p["title"]."\t(".(($p["votes"]>0) ? "+":"").$p["votes"].")", "list-group-item-heading post-title", "post-title-".$p["post_id"]));
+		if ($p["status"]=="STICKIED")
+			$title["children"][] = css_float(div(glyph("pushpin")), "right");
+		$d = small("submitted by ".to_html(user_link($p["username"]))." on ".$p["time"].(($show_soc) ? " to ".to_html(soc_link($sname)):""), "post-details");
+		$a["children"][] = div($title, "row");
+		$div2 = div($a, "col-sm-11 container-fluid");
+		$div2["children"][] = div($d, "row");
+		$div2["children"][] = div(small($p["comments"]." comments", "post-summ-comms"), "row");
+		$div = div(post_vote_buttons($p), "list-group-item container-fluid post-summary".(($p["status"]=="STICKIED") ? "post-stickied":""));
+		$div["children"][] = $div2;
+		return $div;
+	}
 
 	/**
 		Comment-related

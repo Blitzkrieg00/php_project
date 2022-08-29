@@ -1,10 +1,13 @@
-<div class="container-fluid well well-lg page-header" >
+
+<div class="container well well-lg page-header" >
 	<h1 class="soc_title"><?php echo to_html(soc_link($soc["soc_name"]), "soc-title"); ?><small></small></h1>
 	<div class="btn-toolbar">
 		<hr>
+		
 		<?php
+			
 			echo "<a role=button href=\"soc.php?soc=".$soc["soc_name"]."&saction=";
-			// sub/unsub button
+			// sub/unsub button			
 			if ($status["sub"])
 				echo "unsub\" class=\"btn btn-success btn-sm\"><span class=\"glyphicon glyphicon-ok-sign\"></span> Subscribed";
 			else

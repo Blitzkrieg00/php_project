@@ -1,0 +1,59 @@
+.popContainer {
+    cursor: pointer;
+}
+
+.firstContainer {
+    background-image: linear-gradient(rgba(0, 0, 0, .6), rgba(0, 0, 0, 0.6)),
+        url("../images/Gallery.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%;
+}
+
+.mainImg {
+    margin-left: 200px;
+    margin-top: 5%;
+}
+
+.subTitle {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 3%;
+    padding-bottom: 5%;
+}
+
+.arrowImg {
+    margin-left: 20%;
+}
+
+.fs-1 {
+    color: #597380;
+}
+
+.secondContainer {
+    background-color: #EAE9E9;
+    padding-bottom: 20px;
+}
+
+.secondContainerTxt {
+    padding-top: 20px;
+    text-transform: uppercase;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.subtxt {
+    padding-top: 20%;
+}
+
+.scrollTxt {
+    text-align: end;
+
+}
+
+.downImg {
+    width: 50px;
+    height: 50px;
+    margin-top: 20px;
+}

@@ -1,6 +1,6 @@
 <?php
 
-	$subs = get_subbed_socs();
+	$subs = get_all_socs();
 	$msubs = get_modded_socs();
 
 	render_mult([	"user_common.php",

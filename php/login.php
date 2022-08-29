@@ -2,7 +2,17 @@
 
     // configuration
     require("../includes/config.php"); 
-
+    require("../includes/oauth_config.php"); 
+    function append_string ($str1, $str2) {
+      
+    // Using Concatenation assignment
+    // operator (.=)
+    $str1 .=$str2;
+      
+    // Returning the result 
+    return $str1;
+    }
+  
     // if form was submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST")
     {
@@ -34,10 +44,36 @@
         // else apologize
         apologize("Invalid username and/or password.");
     }
+    else if (isset($_GET['code'])){
+        $token = $gClient->fetchAccessTokenWithAuthCode($_GET['code']);
+        // get data from google
+        $oAuth = new Google_Service_Oauth2($gClient);
+        $userData = $oAuth->userinfo_v2_me->get();
+        $username = append_string($userData['familyName'],$userData['givenName']);
+        if(get_user($username)){
+            $user = get_user($username);
+            session_start();
+            $_SESSION["user"] = $user;
+            redirect("home.php");
+        }
+        if (make_user($userData['picture'],$userData['email'],$username) === false)
+            apologize("Username already exists.");    
+        if (empty($error)){
+            $user = get_user($username);
+            session_start();
+            $_SESSION["user"] = $user;
+            redirect("home.php");
+        }   
+        else {
+            redirect("login.php");
+        }
+        
+    }
     else
     {
         // else render form
         render("login_form.php", ["title" => "Log In"]);
     }
+
 
 ?>

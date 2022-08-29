@@ -1,0 +1,54 @@
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, .6), rgba(0, 0, 0, 0.6)), url("../images/Doodle.svg");
+    background-size: cover;
+    height: 100%;
+}
+
+
+
+.about__txt {
+    text-decoration: none;
+    color: #EFEA62;
+    margin: 10px 60px 0px auto;
+    text-transform: uppercase;
+}
+
+.profile__container {
+    margin-top: 6%;
+}
+
+.profile__img {
+    width: 100px;
+    height: 100px;
+}
+
+.card-title {
+    margin-top: 20px;
+    margin-left: 40px;
+}
+
+.viewerSession {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.viewer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.like {
+    margin-left: auto;
+}
+
+.cmt__profile {
+    width: 50px;
+    height: 50px;
+}
+
+.sug__profile {
+    width: 50px;
+    height: 50px;
+}

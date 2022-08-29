@@ -3,8 +3,16 @@
     // configuration
     require("../includes/config.php"); 
 	
-	verify_access();
-	
+	function hola_access()
+	{
+		session_start();
+		if (!isset($_SESSION["user"]))
+		{
+			$id=$_GET["soc"];
+			redirect("guest_soc.php?soc=$id");
+		}
+	}
+	hola_access();
 	if (!isset($_GET["soc"])) 		
 		redirect("home.php");
 

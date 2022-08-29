@@ -21,15 +21,20 @@
 						]
 					 );
 	}
-		
-	function make_user($uname, $pwd)
+	function generateCode($length){
+		$chars = "vwxyzABCD02789";
+		$code = ""; 
+		$clen = strlen($chars) - 1;
+		while (strlen($code) < $length){ 
+			$code .= $chars[mt_rand(0,$clen)];
+		}
+		return $code;
+    }
+	function make_user($avatar,$email,$uname, $pwd='generateCode(5)')
 	{
-		return tquery("	INSERT INTO users(username, password) 
-						VALUES(?, ?)", 
-						[
-							$uname, 
-							password_hash($pwd, PASSWORD_DEFAULT)
-						]
+		return tquery("	INSERT INTO users(avatar,email,username,password) 
+						VALUES(:avatar,:email,:username,:password)", 
+						array(':avatar'=>$avatar,':email'=>$email,':username'=>$uname,':password'=>password_hash($pwd, PASSWORD_DEFAULT))
 					);
 	}
 	
@@ -136,17 +141,28 @@
 					 );
 	}
 	
-	function make_soc($sname)
+	function make_soc($sname,$text)
 	{
 		if (am_banned())	apologize("Access Denied.");
-		
-		return tquery("	INSERT INTO societies(soc_name, created_by)
-						VALUES(?, ?)", 
-						[
-							$sname,
-							$_SESSION["user"]["user_id"]
-						]
+		$h = tquery("INSERT INTO societies(soc_name, created_by)
+					VALUES(?, ?)", 
+					[
+						$sname,
+						$_SESSION["user"]["user_id"]
+					]
+				);
+		$a = query("SELECT soc_id from societies WHERE soc_name=?",$sname);
+		$a = $a[0]['soc_id'];
+		$a =  (int) $a;
+		tquery("	INSERT INTO soc_details(soc_id, revised_by,info)
+						VALUES(:soc_id,:revised_by,:info)", 
+						array(":soc_id"=>$a,":revised_by"=>$_SESSION["user"]["user_id"],":info"=>$text)
 					);
+		$b = query("SELECT rev_id from soc_details WHERE info=?",$text);
+		$b = $b[0]['rev_id'];
+		$b = (int) $b;
+		tquery("UPDATE societies SET rev_id=? where soc_id=?",[$b,$a]);
+		return $h;
 	}
 	
 	function lock_soc($sname, $comment = null)
@@ -479,18 +495,19 @@
 					);
 	}
 
-	function make_post($s, $title, $text = null)
+	function make_post($s, $title, $text = null,$image)
 	{
 		if (am_banned_soc($s) || am_banned())		apologize("Access Denied.");
 		if(!$title)									apologize("Post must have a title");
 
-		return tquery(" insert into posts(user_id, soc_id, title, text)
-						values(?, ?, ?, ?)",
+		return tquery(" insert into posts(user_id, soc_id, title, text, img)
+						values(?, ?, ?, ?, ?)",
 						[
 							$_SESSION["user"]["user_id"],
 							$s["soc_id"],
 							$title,
-							$text
+							$text,
+							$image
 						]
 					 );
 	}
@@ -688,7 +705,7 @@
 					 );
 	}
 
-	function make_pm($to, $subj = null, $msg)
+	function make_pm($to, $msg, $subj = null)
 	{
 		return tquery("	INSERT INTO pms(sender, receiver, subject, msg) 
 						VALUES(?, ?, ?, ?)", 
