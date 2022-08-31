@@ -1,7 +1,7 @@
 <?php
 
     // your database's name
-    define("DATABASE", "db");
+    define("DATABASE", "mm");
 
     // your database's username
     define("USERNAME", "mmk");

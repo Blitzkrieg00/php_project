@@ -4,10 +4,13 @@
 		Soc functions
 	*/
 	function get_all_socs(){
-		return query("	SELECT 	s.soc_id, s.rev_id, 
-								s.created_by as \"subbed since\", 
-								s.soc_name as \"society\" 
-						FROM societies s");
+		return query("	SELECT 	s.*, d.rev_id, d.revised_by, d.info, DATE_FORMAT(d.time, '%H:%i, %b %d, %Y') \"time\",
+								r.username revised_by,
+								c.username c_name,c.avatar
+								FROM societies s 
+								JOIN users c on c.user_id = s.created_by
+								LEFT JOIN soc_details d on d.rev_id = s.rev_id
+								JOIN users r on r.user_id = d.revised_by");
 	}
 
 	function get_society($sname, $show_deleted = false)

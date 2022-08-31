@@ -8,10 +8,12 @@
 	if (empty($_POST["pid"]))		apologize("Post-id missing.");
 
 	// make post
-	if (make_comment(get_post($_POST["pid"]), $_POST["text"], !empty($_POST["parent_id"]) ? $_POST["parent_id"]:null) === false){
+	$pid = htmlspecialchars($_POST["pid"]);
+	$text = htmlspecialchars($_POST["text"]);
+	if (make_comment(get_post($pid), $text, !empty($_POST["parent_id"]) ? $_POST["parent_id"]:null) === false){
 		apologize("Failed to submt comment.");
 	}
 
-	redirect("/php/home.php");
+	redirect("/php/home.php#".$pid);
 
 ?>

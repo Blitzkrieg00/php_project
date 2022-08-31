@@ -1,47 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn Myanmar Independence</title>
-    <!-- Custom Css -->
-    <link rel="stylesheet" href="./main.css">
-    <link rel="stylesheet" href="../app.css">
-    <!-- CSS only -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-    <!-- JavaScript Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous">
-    </script>
-<style type="text/css">
-#profileDisplay { display: block; height: 60px; width: 60px; margin: 0px auto; border-radius: 50%; }
-.img-placeholder {
-  width: 60px;
-  color: white;
-  height: 100%;
-  background: black;
-  opacity: .7;
-  height: 60px;
-  border-radius: 50%;
-  z-index: 2;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: none;
-}
-.img-placeholder h4 {
-  margin-top: 40%;
-  color: white;
-}
-.img-div:hover .img-placeholder {
-  display: block;
-  cursor: pointer;
-}
-
-  </style>
   <script type="text/javascript">
     function triggerClick(e) {
   document.querySelector('#profileImage').click();
@@ -83,7 +40,7 @@ function displayImage(e) {
         <div class="m-auto w-75 h-75">
             <div class="m-xxl-5">
                 <div class="row">
-                    <a href="../Profile/post.html"
+                    <a href="../php/show_society.php"
                         class="rounded-start col-sm-6 p-xxl-5 first d-flex justify-content-center align-items-center flex-column">
                         <img src="../images/logo.svg" alt="logo" class="img-fluid w-50 h-50">
                         <img src="../images/text.svg" alt="logo" class="img-fluid w-50 h-50">

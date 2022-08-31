@@ -1,4 +1,5 @@
 <!-- New PM modal -->
+
 <div>
 	<div id="new-pm" class="modal fade">
 		<div class="modal-dialog" role="form">
@@ -38,7 +39,7 @@
 				<form id="user_report_f" class="" method="POST" action="report_user.php">
 					<div class="modal-body">
 						<div class="form-group">
-						<input name="report_username" id="report-user-id" class="form-control hidden" value=<?php echo $_GET["u"]; ?> readonly="">
+						<input name="report_username" id="report-user-id" class="form-control hidden" value=<?php //echo $_GET["u"]; ?> readonly="">
 						</div>
 						<div class="form-group">
 						<textarea name="report_user_reason" id="report-user-text" class="form-control" rows="4" placeholder="Reason for reporting..."></textarea>
@@ -84,8 +85,11 @@
 		</a>
 	</li>
 	<?php
+
 		if ($self) 
 		{
+			//echo "<h1>aaaaaaaaaaaaaaa</h1>";
+			
 			echo "<li class=\"".($t=="inbox" ? "active":"")."\" >".
 					"<a href=\"".$pg."inbox"."\" >".
 						"<span class=\"glyphicon glyphicon-envelope\"></span>".

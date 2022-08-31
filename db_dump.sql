@@ -750,10 +750,10 @@ CREATE TABLE IF NOT EXISTS `soc_views` (
 
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) NOT NULL,
   `username` varchar(20) NOT NULL,
-  `avatar` varchar(300) NOT NULL,
-  `email` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `avatar` varchar(300) NOT NULL,
   `status` enum('ADMIN','NORMAL','BANNED') NOT NULL DEFAULT 'NORMAL',
   `failed_logins` int(10) unsigned NOT NULL DEFAULT '0',
   `join_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

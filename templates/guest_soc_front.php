@@ -33,7 +33,7 @@
 							echo "<h5>";
 							echo  $p['text'];
 							echo "</h5>";
-                        	echo '<img src="',$_SESSION["user"]["avatar"],'" alt="sample" class="img-fluid">';
+                        	echo '<img src="',$p["img"],'" alt="sample" class="img-fluid">';
                     		echo '</div>';
                     		echo '<div class="card-footer">';
                         	echo '<div class="viewerSession">';

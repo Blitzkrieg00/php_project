@@ -37,7 +37,7 @@
                     		echo '<div class="card-header d-flex">';
                         	echo '<img src="',$p["avatar"],'"alt="profile" class="profile__img" style="width:80px;height:80px;" id="profile">';
                         	echo '<div class="card-title">';
-                            echo '<h4>',$p['username'],'</h4>';
+                            echo '<h4 id="',$p['post_id'],'">',$p['username'],'</h4>';
                             echo '<p>',$p['time'],'</p>';
                         	echo '</div>';
                     		echo '</div>';
@@ -50,7 +50,7 @@
 							echo "<h5>";
 							echo  $p['text'];
 							echo "</h5>";
-                        	echo '<img src="',$_SESSION["user"]["avatar"],'" alt="sample" class="img-fluid">';
+                        	echo '<img src="',$p["img"],'" alt="sample" class="img-fluid">';
                     		echo '</div>';
                     		echo '<div class="card-footer">';
                         	echo '<div class="viewerSession">';
@@ -116,7 +116,7 @@
 
 								foreach ($subs as $sub) {
 								echo '<div class="suggestedContainer d-flex">';
-            					echo '<img src="../images/profile.png" alt="profile" class=" me-2 mt-2 sug__profile">';
+            					echo '<img src="',$_SESSION["user"]["avatar"],'" alt="profile" class=" me-2 mt-2 sug__profile" id="profile">';
             					echo '<div class="ms-3 sug__text">';
             					echo '<a href="soc.php?soc=',$sub['society'],'" >';
             					echo '<p>',$sub['society'],'</p>';

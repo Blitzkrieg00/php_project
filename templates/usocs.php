@@ -15,7 +15,7 @@
 	echo to_html($table);
 
 	$table = div(div(par("All societies"), "panel-heading"), "panel panel-primary");
-	$table["children"][] = make_table($subs, ["society"], "table", "ussocs", [], [0]);
+	$table["children"][] = make_table($subs, ["soc_name"], "table", "ussocs", [], [0]);
 
 	echo to_html($table);
 
